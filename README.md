@@ -6,48 +6,48 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of hypogeom is to …
+`hypogeom` implements the basic distribution functions for the
+hypogeometric distribution, which is the sum of independent geometric
+distributions. It is the discrete analogue of the hypoexponential
+distribution.
 
 ## Installation
 
-You can install the development version of hypogeom like so:
+You can install the development version of from GitHub with:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+# install.packages("devtools")
+devtools::install_github("damian-t-p/hypogeom")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This package contains functions that are typically associated with
+probability distributions in R. That is, the probability mass function,
+distribution function, quantile function, and random generator.
 
 ``` r
 library(hypogeom)
-## basic example code
-```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+# The hypogeometric distribution is parameterised by a vector of success probabilites,
+# which are the parameters of the constituent geometric distributions
+probs <- c(0.2, 0.5, 0.01)
+
+dgeom(c(0, 1, 2, 10), probs)
+#> [1] 0.20000000 0.25000000 0.00980100 0.02147484
+```
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+pgeom(c(-1, 2, 5.5), probs)
+#> [1] 0.00000000 0.87500000 0.05851985
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+``` r
+qgeom(c(0.05, 0.5, 0.95), probs)
+#> [1]   0   0 298
+```
 
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+rgeom(10, probs)
+#>  [1]   5   3   5   0   0 290  10   0  38  11
+```
