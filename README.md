@@ -31,23 +31,23 @@ library(hypogeom)
 
 # The hypogeometric distribution is parameterised by a vector of success probabilites,
 # which are the parameters of the constituent geometric distributions
-probs <- c(0.2, 0.5, 0.01)
+probs <- c(0.2, 0.5, 0.1)
 
-dgeom(c(0, 1, 2, 10), probs)
-#> [1] 0.20000000 0.25000000 0.00980100 0.02147484
+dhypogeom(c(0, 1, 2, 10), probs)
+#> [1] 0.01000000 0.02200000 0.03270000 0.04772124
 ```
 
 ``` r
-pgeom(c(-1, 2, 5.5), probs)
-#> [1] 0.00000000 0.87500000 0.05851985
+phypogeom(c(-1, 2, 5.5), probs)
+#> [1] 0.0000000 0.0647000 0.2028012
 ```
 
 ``` r
-qgeom(c(0.05, 0.5, 0.95), probs)
-#> [1]   0   0 298
+qhypogeom(c(0.05, 0.5, 0.95), probs)
+#> [1]  2 11 35
 ```
 
 ``` r
-rgeom(10, probs)
-#>  [1]   5   3   5   0   0 290  10   0  38  11
+rhypogeom(10, probs)
+#>  [1]  9 30 14 39 12 15 17 73 15  2
 ```
