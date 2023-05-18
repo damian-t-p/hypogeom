@@ -59,7 +59,7 @@ phypogeom <- function(q, probs, lower.tail = TRUE, log.p = FALSE, ...) {
 
   if (any(probs > 1 | probs <= 0)) {
     warning("NaNs produced")
-    return(rep(NaN, length(x)))
+    return(rep(NaN, length(q)))
   }
   
   cdf <- .chypogeom(probs, ...)
