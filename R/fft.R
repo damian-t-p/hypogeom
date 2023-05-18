@@ -4,11 +4,17 @@
 #' variable
 #' @param eps Error tolerance for density
 #' @param max_N Maximum N at which to truncate the densities
+#' @param d_override Density vector that overwrites the function output. Use this option if you are
+#' frequently re-running hypogeometric functions with the same parameters,
 #'
 #' @return A vector of numerics of length N, where N is a truncation that ensures
 #' the desired precision. The `k`th entry of the return vector is `Pr(X = K-1)`
-.dhypogeom <- function(probs, eps = .Machine$double.eps, max_N = Inf) {
+.dhypogeom <- function(probs, eps = .Machine$double.eps, max_N = Inf, d_override = NULL) {
 
+  if (!is.null(d_override)) {
+    return(d_override)
+  }
+  
   n   <- length(probs)
   N   <- min(qgeom(eps/n, min(probs), lower.tail = FALSE) * n, max_N)
   
