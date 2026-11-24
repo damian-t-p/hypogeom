@@ -29,17 +29,24 @@ dhypogeom <- function(x, probs, log = FALSE, ...) {
     return(rep(NaN, length(x)))
   }
   
-  # compute list of pmf values
-  # pmf[k] = Pr(X = k-1)
-  pmf <- .dhypogeom(probs, ...)
+  # support length, as used by the FFT path
+  N <- .hypogeom_N(probs, ...)
   
   # any non-integer x should produce a zero density and throw a warning
   # negative integer values should produce a zero but not throw a warning
-  int_x_idxs <- ((x %% 1) == 0) & (x >= 0) & (x < length(pmf))
+  int_x_idxs <- ((x %% 1) == 0) & (x >= 0) & (x < N)
   for (bad_x in x[!int_x_idxs]) {
     if ((x %% 1) != 0) {
       warning(paste("non-integer x =", bad_x))
     }
+  }
+  
+  # pmf[k] = Pr(X = k-1), computed only as far as needed
+  if (!is.null(list(...)$d_override)) {
+    pmf <- list(...)$d_override
+  } else {
+    L <- min(N, 1 + max(c(0, x[int_x_idxs]), na.rm = TRUE))
+    pmf <- .dhypogeom_head(probs, L)
   }
   
   d_vals <- numeric(length(x))
@@ -62,7 +69,15 @@ phypogeom <- function(q, probs, lower.tail = TRUE, log.p = FALSE, ...) {
     return(rep(NaN, length(q)))
   }
   
-  cdf <- .chypogeom(probs, ...)
+  N <- .hypogeom_N(probs, ...)
+  pos_q_idxs <- (q >= 0) & (q < N)
+  
+  if (!is.null(list(...)$d_override)) {
+    cdf <- cumsum(list(...)$d_override)
+  } else {
+    L <- min(N, 1 + max(c(0, floor(q[pos_q_idxs])), na.rm = TRUE))
+    cdf <- cumsum(.dhypogeom_head(probs, L))
+  }
   
   if (!lower.tail) {
     cdf <- 1 - cdf
@@ -70,10 +85,9 @@ phypogeom <- function(q, probs, lower.tail = TRUE, log.p = FALSE, ...) {
 
   # Set negative and extremely large values to 0 and 1 respectively
   p_vals <- rep(0, length(q))
-  p_vals[q >= length(cdf)] <- 1
+  p_vals[q >= N] <- 1
 
   # Replace non-integer values with the corresponding floor
-  pos_q_idxs <- (q >= 0) & (q < length(cdf))
   p_vals[pos_q_idxs] <- cdf[floor(q[pos_q_idxs]) + 1L]
   
   if (log.p == TRUE) {

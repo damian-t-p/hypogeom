@@ -25,6 +25,7 @@ devtools::install_github("damian-t-p/hypogeom")
 This package contains functions that are typically associated with
 probability distributions in R. That is, the probability mass function,
 distribution function, quantile function, and random generator.
+`dhypogeom()` and `phypogeom()` compute the required leading probabilities exactly by sequential convolution; the FFT is used only by `qhypogeom()`.
 
 ``` r
 library(hypogeom)
